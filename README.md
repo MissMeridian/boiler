@@ -1,3 +1,4 @@
+![Boiler](https://github.com/MissMeridian/boiler/blob/main/docs/boiler.png)
 # Boiler
 
 This is not yet ready for public use!

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo "WARNING: This script will install boiler to a folder in the $HOME directory. You can re-locate this later, but remember to update the systemd services."
 read -p "Proceed? (y/n) " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
