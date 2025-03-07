@@ -33,10 +33,16 @@ def check_filters(entry:dict):
             log.debug(f"'filters.cfg' loaded successfully.")
     except FileNotFoundError:
         log.error("'filters.cfg' not found in working directory! Ignoring filters, all alerts will be placed on the feed.")
+        process = True
+        return process # So that boiler won't continue erroring out
     except json.decoder.JSONDecodeError:
         log.error("'filters.cfg' is not formatted properly and could not be decoded! Filters will be ignored and all alerts will be placed on the feed.")
+        process = True
+        return process # So that boiler won't continue erroring out
     except:
         log.error(f"An unexpected error occurred while trying to load the filters configuration.", exc_info=True)
+        process = True
+        return process # So that boiler won't continue erroring out
 
     for filter_name, rules in filters.items():
         match = True
