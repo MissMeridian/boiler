@@ -56,6 +56,14 @@ def update_feed(config:dict):
     feed_id = ET.SubElement(root, "id")
     feed_id.text = config_feed_url
 
+    # Check to see if the alerts directory even exists first
+    if not os.path.exists(alerts_dir):
+        log.warning(f"Alerts directory does not yet exist! Creating.")
+        os.makedirs(alerts_dir)
+        log.info(f"Successfully created directory: {alerts_dir}")
+    else:
+        log.debug(f"OK - {alerts_dir} exists.")
+
     # Update feed.xml
     for alert_dir in os.listdir(alerts_dir):
         alert_path = os.path.join(alerts_dir, alert_dir)

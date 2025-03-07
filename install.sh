@@ -121,6 +121,7 @@ EOL
     echo "Enabling services..."
     sudo systemctl enable boiler-alerts.service
     sudo systemctl enable boiler-web.service
+    systemctl start boiler-alerts boiler-web
 
     echo "Setup complete! You should see an XML response on http://localhost:8080/IPAWSOPEN_EAS_SERVICE/rest/update"
     echo "Make sure to edit your config and set the root_url to match your server's domain or IP address! You will need to restart boiler-alerts and boiler-web."
