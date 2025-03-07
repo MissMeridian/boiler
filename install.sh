@@ -15,6 +15,8 @@ then
         sudo apt install -y git
     else
         echo "git is installed."
+    fi
+
     echo "Checking for ffmpeg."
     if ! command -v ffmpeg &> /dev/null
     then
@@ -22,6 +24,7 @@ then
         sudo apt install -y ffmpeg
     else
         echo "ffmpeg is installed."
+    fi
 
     echo "Checking for python3, python3-venv, and python3-pip."
     if ! command -v python3 &> /dev/null
@@ -35,12 +38,16 @@ then
             sudo apt install -y python3-venv
         else
             echo "python3-venv is installed."
+        fi
+
         if ! command -v python3-pip &> /dev/null
         then
             echo "python3-pip is not installed, installing."
             sudo apt install -y python3-pip
         else
             echo "python3-pip is installed."
+        fi
+    fi
 
     BOILER_DIR=$HOME/boiler
     if [ -d "$BOILER_DIR" ]; then
@@ -64,7 +71,7 @@ then
     if [ -f "$BOILER_DIR/requirements.txt" ]; then
         echo "Installing dependencies from requirements.txt..."
         pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r "$BOILER_DIR/requirements.txt"
     else
         echo "requirements.txt not found, please make sure all the files copied correctly!"
     fi
