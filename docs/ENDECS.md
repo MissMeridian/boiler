@@ -51,3 +51,5 @@ To set up a Boiler CAP client on the SAGE, follow these steps:
 ## TFT EAS 911+
 **Not supported.** The TFT EAS 911+ cannot be supported because verification of IPAWS signatures is forcefully enabled with no way to disable it without modification to the code, which we do not have at this time. If a hack becomes available, an update to Boiler to verify its support will be made later on.
 
+## TFT 3320/2008
+**No.**
