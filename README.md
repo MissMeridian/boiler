@@ -7,5 +7,5 @@ This is not yet ready for public use! I am actively working on the things below.
 - ~~Test install.sh~~
 - Write README.md
 - ~~Explain config~~
-- Explain filters
+- ~~Explain filters~~
 - Explain NGINX config
