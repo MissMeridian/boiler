@@ -6,7 +6,8 @@
 5. Verify that the services are running:
     - `systemctl status boiler-alerts`
     - `systemctl status boiler-web`
-If systemctl does not show a FAILED or DEAD state, you should be able to see a response by visiting the default config's port and path. Replace the hostname with the machine's IP address or localhost if you are running it on your local system.
-    - `http://system-ip-or-localhost:8080/IPAWSOPEN_EAS_SERVICE/rest/feed`
+
+If systemctl does not show a FAILED or DEAD state, you should be able to see a response by visiting the default config's port and path. Replace the hostname with the machine's IP address or localhost if you are running it on your local system. 
+- Visit `http://system-ip-or-localhost:8080/IPAWSOPEN_EAS_SERVICE/rest/feed`
 
 That's it for installation! ![Continue to configuration.](https://github.com/MissMeridian/boiler/blob/main/docs/CONFIG.md)
