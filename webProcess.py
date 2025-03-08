@@ -54,6 +54,16 @@ def get_alert_audio(alert_id):
     else:
         return Response("<error>Alert not found</error>", status=404, mimetype="application/xml")
 
+@app.route(f"{config['web']['alerts_suffix']}/<alert_id>/source-audio.mp3", methods=["GET"])
+def get_alert_source_audio(alert_id):
+    alerts_dir = config.get("alerts_dir")
+    alert_path = os.path.join(alerts_dir, alert_id, "source_audio.mp3")
+
+    if os.path.exists(alert_path):
+        return send_file(alert_path, mimetype="audio/mpeg")
+    else:
+        return Response("<error>Alert not found</error>", status=404, mimetype="application/xml")
+
 
 if __name__ == "__main__":
     host_address = config["web"]["flask"]["host_address"]
