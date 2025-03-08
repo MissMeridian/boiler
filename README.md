@@ -20,6 +20,7 @@ Great. Now that we're on the same page, let's begin!
 2. [Configuring Boiler](https://github.com/MissMeridian/boiler/blob/main/docs/CONFIG.md)
 3. [Setting up filters](https://github.com/MissMeridian/boiler/blob/main/docs/FILTERS.md)
 4. [Adding Boiler to your Emergency Alert System receiver](https://github.com/MissMeridian/boiler/blob/main/docs/ENDECS.md)
+5. [Testing the feed](https://github.com/MissMeridian/boiler/blob/main/docs/TESTING.md)
 
 # Support and Feedback
 If you experience issues or errors with Boiler, please report them in [issues](https://github.com/MissMeridian/boiler/issues). I will do my best to make fixes where necessary.
