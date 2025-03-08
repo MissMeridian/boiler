@@ -43,6 +43,7 @@ To set up a Boiler CAP client on the SAGE, follow these steps:
 **Additional Notes:**
 - The SAGE Digital was the pickiest ENDEC to get Boiler to work with. That's because...
 - It was very picky about HTTP and non-SSL hosts, even with "No SSL check" selected. If you are debugging the SAGE being unable to receive from Boiler, check the journalctl for boiler-web for connection details.
+- The SAGE will ALWAYS append the URL with `/IPAWSOPEN_EAS_SERVICE/rest/update`, so your **update_suffix** needs to match that, otherwise it will not work for the SAGE.
 - Required "statefips" category tag label on every alert entry in /feed.
 
 ## Gorman-Redlich CAPDEC-1
