@@ -11,8 +11,13 @@ def poll(url:str):
     
     Probably won't work anywhere else but this string is replaceable in the event the API changes in the future.'''
     log.info(f"Polling for active alerts on {url}")
+
+    headers = {
+        "User-Agent": "BOILER"
+    }
+
     try:
-        r = requests.get(url, timeout=10)
+        r = requests.get(url, timeout=10, headers=headers)
         feed = r.json()
         return feed
     except requests.exceptions.Timeout:

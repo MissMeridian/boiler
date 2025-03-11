@@ -21,8 +21,11 @@ class AudioFormatError(Exception):
 def download_mp3(url:str, path:str):
     '''Downloads the MP3 file at the desired URL with optimal exception handling to prevent unexpected errors.'''
     log.debug(f"Downloading alert audio from {url}")
+    headers = {
+        "User-Agent": "BOILER"
+    }
     try:
-        r = requests.get(url=url)
+        r = requests.get(url=url, headers=headers, timeout=10)
         if r.headers.get("Content-Type") == "audio/mpeg":
             with open(path, "wb") as file:
                 file.write(r.content)
