@@ -88,7 +88,8 @@ def update_feed(config:dict):
                     log.info(f"Alert {alert_id} ({alert_json.get('cacheKey')}) has expired!")
                     if config_delete_on_expire:
                         log.info(f"Deleting alert {alert_id}.")
-                        os.remove(path=alert_path)
+                        #os.remove(path=alert_path)
+                        shutil.rmtree(path=alert_path, ignore_errors=True) # thanks linux
                     else:
                         log.info(f"Archiving alert {alert_id}.")
                         move_to_archive(alert_dir=alert_path, archive_dir=archive_dir)
