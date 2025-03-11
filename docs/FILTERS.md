@@ -20,6 +20,7 @@ Filters are laid out in ![filters.cfg](https://github.com/MissMeridian/boiler/bl
   - If "allow" is `true`, the alert will be accepted.
   - If "allow" is `false`, the alert will be ignored/blocked.
   - If "allow" is undefined, the alert will be accepted (interpreted as `true` if given no value).
+- If an option is set to `null` then it will not be considered when the filter is being checked.
 
 Make sure your comma placement and JSON formatting is correct otherwise your filters will fail.
 
