@@ -30,3 +30,4 @@ Are there features or improvements you'd like to see in Boiler? Don't ask me to 
 # To-Do:
 - Explain NGINX proxy config
 - Come up with a better solution for attention tone detection (eventually)
+- Circumvent overwrite of boiler.cfg and filters.cfg on re-running install.sh
