@@ -1,58 +1,57 @@
 #!/usr/bin/env bash
-echo "WARNING: This script will install boiler to a folder in the $HOME directory. You can re-locate this later, but remember to update the systemd services."
+
+echo "WARNING: This script will install boiler to a folder in the \$HOME directory. You can re-locate this later, but remember to update the systemd services."
 read -p "Proceed? (y/n) " -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    cd $HOME # get us where we need to be 
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    cd "$HOME" || exit 1
 
-    echo "Updating package repositories"
-    sudo apt-get update
+    echo "Detecting Linux distribution..."
 
-    echo "Checking for git."
-    if ! command -v git &> /dev/null
-    then
-        echo "git not found, installing."
-        sudo apt install -y git
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        DISTRO=$ID
     else
-        echo "git is installed."
+        echo "Cannot detect Linux distribution. Please install dependencies manually."
+        exit 1
     fi
 
-    echo "Checking for ffmpeg."
-    if ! command -v ffmpeg &> /dev/null
-    then
-        echo "ffmpeg not found, installing."
-        sudo apt install -y ffmpeg
-    else
-        echo "ffmpeg is installed."
-    fi
+    echo "Detected distro: $DISTRO"
 
-    echo "Checking for python3, python3-venv, and python3-pip."
-    if ! command -v python3 &> /dev/null
-    then
-        echo "Python 3 is not installed, installing."
-        sudo apt install -y python3 python3-venv python3-pip
-    else
-        if ! command -v python3-venv &> /dev/null
-        then
-            echo "Python 3 is installed but python3-venv is missing. Installing."
-            sudo apt install -y python3-venv
-        else
-            echo "python3-venv is installed."
-        fi
+    install_packages() {
+        case "$DISTRO" in
+            ubuntu|debian)
+                sudo apt-get update
+                sudo apt-get install -y git ffmpeg python3 python3-venv python3-pip
+                ;;
+            arch|manjaro)
+                sudo pacman -Syu --noconfirm
+                sudo pacman -S --noconfirm git ffmpeg python python-virtualenv python-pip
+                ;;
+            fedora)
+                sudo dnf install -y git ffmpeg python3 python3-virtualenv python3-pip
+                ;;
+            void)
+                sudo xbps-install -S
+                sudo xbps-install -y git ffmpeg python3 python3-pip python3-virtualenv
+                ;;
+            gentoo)
+                sudo emerge --sync
+                sudo emerge dev-vcs/git media-video/ffmpeg dev-lang/python dev-python/pip dev-python/virtualenv
+                ;;
+            *)
+                echo "Unsupported distro: $DISTRO. Please install git, ffmpeg, python3, python3-venv, and python3-pip manually."
+                exit 1
+                ;;
+        esac
+    }
 
-        if ! command -v python3-pip &> /dev/null
-        then
-            echo "python3-pip is not installed, installing."
-            sudo apt install -y python3-pip
-        else
-            echo "python3-pip is installed."
-        fi
-    fi
+    install_packages
 
     BOILER_DIR=$HOME/boiler
     if [ -d "$BOILER_DIR" ]; then
         echo "Directory $BOILER_DIR already exists. Deleting it..."
-        rm -rf "$BOILER_DIR" # oh god, PLEASE be careful
+        rm -rf "$BOILER_DIR"
     fi
 
     git clone https://github.com/MissMeridian/boiler.git "$BOILER_DIR"
@@ -61,12 +60,12 @@ then
 
     if [ ! -d "$VENV_DIR" ]; then
         echo "Creating virtual environment in $VENV_DIR..."
-        python3 -m venv $VENV_DIR
+        python3 -m venv "$VENV_DIR"
     else
         echo "Virtual environment already exists....? But how?"
     fi
 
-    source $VENV_DIR/bin/activate
+    source "$VENV_DIR/bin/activate"
 
     if [ -f "$BOILER_DIR/requirements.txt" ]; then
         echo "Installing dependencies from requirements.txt..."
@@ -79,6 +78,7 @@ then
     deactivate
 
     echo "Installing boiler-alerts and boiler-web systemd services..."
+
     cat <<EOL | sudo tee /etc/systemd/system/boiler-alerts.service
 [Unit]
 Description=Boiler - Alerts & Feed Management
@@ -121,7 +121,8 @@ EOL
     echo "Enabling services..."
     sudo systemctl enable boiler-alerts.service
     sudo systemctl enable boiler-web.service
-    systemctl start boiler-alerts boiler-web
+    sudo systemctl start boiler-alerts
+    sudo systemctl start boiler-web
 
     echo "Setup complete! You should see an XML response on http://localhost:8080/IPAWSOPEN_EAS_SERVICE/rest/update"
     echo "Make sure to edit your config and set the root_url to match your server's domain or IP address! You will need to restart boiler-alerts and boiler-web."
