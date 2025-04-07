@@ -60,7 +60,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
     if [ ! -d "$VENV_DIR" ]; then
         echo "Creating virtual environment in $VENV_DIR..."
-        python3 -m venv "$VENV_DIR"
+        python3 -m venv "$VENV_DIR" # I wasn't very careful the first time!
     else
         echo "Virtual environment already exists....? But how?"
     fi
