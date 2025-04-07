@@ -61,12 +61,12 @@ then
 
     if [ ! -d "$VENV_DIR" ]; then
         echo "Creating virtual environment in $VENV_DIR..."
-        python3 -m venv $VENV_DIR
+        python3 -m venv "$VENV_DIR" # I wasn't very careful the first time!
     else
         echo "Virtual environment already exists....? But how?"
     fi
 
-    source $VENV_DIR/bin/activate
+    source "$VENV_DIR/bin/activate"
 
     if [ -f "$BOILER_DIR/requirements.txt" ]; then
         echo "Installing dependencies from requirements.txt..."
