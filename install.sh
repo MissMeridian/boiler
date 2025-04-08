@@ -60,7 +60,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
     if [ ! -d "$VENV_DIR" ]; then
         echo "Creating virtual environment in $VENV_DIR..."
-        python3 -m venv "$VENV_DIR" # I wasn't very careful the first time!
+        python3 -m venv "$VENV_DIR"
     else
         echo "Virtual environment already exists....? But how?"
     fi
@@ -77,9 +77,21 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
     deactivate
 
-    echo "Installing boiler-alerts and boiler-web systemd services..."
+    # Detect init system
+    INIT_SYSTEM="systemd"
+    if command -v openrc-init &>/dev/null && [ "$DISTRO" = "gentoo" ]; then
+        INIT_SYSTEM="openrc"
+    elif [ "$DISTRO" = "void" ] && [ -d /etc/runit ]; then
+        INIT_SYSTEM="runit"
+    fi
 
-    cat <<EOL | sudo tee /etc/systemd/system/boiler-alerts.service
+    echo "Using init system: $INIT_SYSTEM"
+
+    case "$INIT_SYSTEM" in
+        systemd)
+            echo "Installing boiler-alerts and boiler-web systemd services..."
+
+            cat <<EOL | sudo tee /etc/systemd/system/boiler-alerts.service
 [Unit]
 Description=Boiler - Alerts & Feed Management
 After=network.target
@@ -95,9 +107,7 @@ User=${USER}
 WantedBy=multi-user.target
 EOL
 
-    echo "Created boiler-alerts.service"
-
-    cat <<EOL | sudo tee /etc/systemd/system/boiler-web.service
+            cat <<EOL | sudo tee /etc/systemd/system/boiler-web.service
 [Unit]
 Description=Boiler - Flask Web Service
 After=network.target
@@ -113,16 +123,68 @@ User=${USER}
 WantedBy=multi-user.target
 EOL
 
-    echo "Created boiler-web.service"
+            sudo systemctl daemon-reload
+            sudo systemctl enable boiler-alerts
+            sudo systemctl enable boiler-web
+            sudo systemctl start boiler-alerts
+            sudo systemctl start boiler-web
+            ;;
 
-    echo "Restarting systemctl daemon..."
-    sudo systemctl daemon-reload
+        openrc)
+            echo "Installing OpenRC services..."
+            sudo tee /etc/init.d/boiler-alerts > /dev/null <<EOL
+#!/sbin/openrc-run
 
-    echo "Enabling services..."
-    sudo systemctl enable boiler-alerts.service
-    sudo systemctl enable boiler-web.service
-    sudo systemctl start boiler-alerts
-    sudo systemctl start boiler-web
+description="Boiler Alerts"
+command="$VENV_DIR/bin/python3"
+command_args="$BOILER_DIR/boiler.py"
+command_background=true
+pidfile="/run/boiler-alerts.pid"
+EOL
+
+            sudo tee /etc/init.d/boiler-web > /dev/null <<EOL
+#!/sbin/openrc-run
+
+description="Boiler Web"
+command="$VENV_DIR/bin/python3"
+command_args="$BOILER_DIR/webProcess.py"
+command_background=true
+pidfile="/run/boiler-web.pid"
+EOL
+
+            sudo chmod +x /etc/init.d/boiler-*
+            sudo rc-update add boiler-alerts default
+            sudo rc-update add boiler-web default
+            sudo rc-service boiler-alerts start
+            sudo rc-service boiler-web start
+            ;;
+
+        runit)
+            echo "Installing runit services..."
+            mkdir -p ~/service/boiler-alerts ~/service/boiler-web
+
+            cat <<EOL > ~/service/boiler-alerts/run
+#!/bin/sh
+exec $VENV_DIR/bin/python3 $BOILER_DIR/boiler.py
+EOL
+
+            cat <<EOL > ~/service/boiler-web/run
+#!/bin/sh
+exec $VENV_DIR/bin/python3 $BOILER_DIR/webProcess.py
+EOL
+
+            chmod +x ~/service/boiler-*/run
+            sudo ln -s ~/service/boiler-alerts /etc/sv/
+            sudo ln -s ~/service/boiler-web /etc/sv/
+            sudo ln -s /etc/sv/boiler-alerts /var/service/
+            sudo ln -s /etc/sv/boiler-web /var/service/
+            ;;
+
+        *)
+            echo "Unsupported init system."
+            exit 1
+            ;;
+    esac
 
     echo "Setup complete! You should see an XML response on http://localhost:8080/IPAWSOPEN_EAS_SERVICE/rest/update"
     echo "Make sure to edit your config and set the root_url to match your server's domain or IP address! You will need to restart boiler-alerts and boiler-web."
