@@ -16,6 +16,7 @@ def get_details():
     alert_org = None
     alert_minutes = None
     alert_audio = None # Not developing this rn because i'm just gonna steal the AP's store_alert function, so any audio that gets passed will need an ATTN and EOMs... in other words, i don't feel like making a bypass
+    alert_audio_y = None
     alert_text = None
     alert_fips = []
     exit_fips_entry_flag = False
@@ -70,6 +71,29 @@ def get_details():
             break
         else:
             alert_text = i
+    while alert_audio_y == None:
+        i = input("Use Audio from URL? (Y/N): ")
+        if not i:
+            alert_audio_y = False
+            break
+        elif i == "yes".upper() or i == "y".upper():
+            alert_audio_y = True
+            break
+        else:
+            alert_audio_y = False
+            break
+    if alert_audio_y == True:
+        while alert_audio == None:
+            i = input(f"Alert Audio URL: ")
+            if not i:
+                print("Audio aborted.")
+                alert_audio_y = False
+                alert_audio = None
+                break
+            else:
+                alert_audio = i # i dont care to verify it's an actual url
+                break
+    
 
     alert_sent_time = dt.datetime.now(tz=dt.timezone.utc)
     alert_end_time = dt.datetime.now(tz=dt.timezone.utc) + dt.timedelta(minutes=alert_minutes)
@@ -88,7 +112,7 @@ def get_details():
         "startTime": alert_sent_time_iso,
         "endTimeEpoch": alert_end_time_epoch,
         "endTime": alert_end_time_iso,
-        "audioUrl": None,
+        "audioUrl": alert_audio,
         "translation": alert_text
     }
 
