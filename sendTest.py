@@ -73,15 +73,17 @@ def get_details():
             alert_text = i
     while alert_audio_y == None:
         i = input("Use Audio from URL? (Y/N): ")
+        i = i.lower()
         if not i:
             alert_audio_y = False
             break
-        elif i == "yes".upper() or i == "y".upper():
+        elif i == "yes" or i == "y":
             alert_audio_y = True
             break
         else:
             alert_audio_y = False
             break
+    print(alert_audio_y)
     if alert_audio_y == True:
         while alert_audio == None:
             i = input(f"Alert Audio URL: ")
