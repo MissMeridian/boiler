@@ -1,25 +1,38 @@
 ## BOILER: CAR to CAP Bridge by CABLE CONTRIBUTES TO LIFE
-import requests, time, json, logging, os, coloredlogs
+import time, json, logging, os, coloredlogs
+from logging.handlers import RotatingFileHandler
 import alertProcessor as ap
 import feedManagement as fm
-import webProcess as wp
 import datetime as dt
 
-# Logging setup.
-log = logging.getLogger()
-startup_time = dt.datetime.now().strftime("%Y-%m-%d-%H.%M.%S")
-startup_time_actual = dt.datetime.now().strftime("%H:%M:%S %m/%d/%Y")
-if not os.path.exists(f"logs"):
-    os.mkdir("logs")
-if os.path.exists("logs/boiler.log"):
-    os.rename("logs/boiler.log", f"logs/boiler-{startup_time}.log")
-log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-log_formatter = logging.Formatter(log_format)
-FileOutputHandler = logging.FileHandler('logs/boiler.log')
-FileOutputHandler.setFormatter(log_formatter)
-coloredlogs.install(level="INFO")
-log.addHandler(FileOutputHandler)
-log.info(f"Logging started at {startup_time_actual}.")
+def setup_logger(log_filename: str = None, log_level=logging.DEBUG):
+    log_name = "Boiler"
+    if not log_filename:
+        log_dir = "logs"
+        os.makedirs(log_dir, exist_ok=True)
+        log_filename = os.path.join(log_dir, f"{log_name}_{dt.datetime.now():%Y-%m-%d_%H-%M-%S}.log")
+
+    logger = logging.getLogger(log_name)
+
+    if __name__ == "__main__":
+        logger.setLevel(log_level)
+        coloredlogs.install(log_level)
+
+        if not any(isinstance(h, RotatingFileHandler) for h in logger.handlers):
+            file_handler = RotatingFileHandler(log_filename, maxBytes=1024*1024*5, backupCount=5) # 5MB max file size, 5 backup files
+            file_handler.setLevel(log_level)
+            formatter = logging.Formatter(
+                "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+                datefmt="%Y-%m-%d %H:%M:%S"
+            )
+            file_handler.setFormatter(formatter)
+            logger.addHandler(file_handler)
+    else:
+        logger.debug(f"{log_name} is not the root script, logs will not be handled to a file.")
+
+    return logger
+
+log = setup_logger()
 
 config = None
 
