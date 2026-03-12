@@ -3,8 +3,7 @@ import os, json, logging, coloredlogs, shutil
 import datetime as dt
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
-coloredlogs.install(level="DEBUG")
+
 
 def check_expiry(timestamp:str):
     timestamp_dt = dt.datetime.fromisoformat(timestamp).replace(tzinfo=dt.timezone.utc)
@@ -138,6 +137,8 @@ def update_feed(config:dict):
 
 
 if __name__ == "__main__":
+    log.setLevel(logging.DEBUG)
+    coloredlogs.install(level="DEBUG")
     test_cfg = {
     "poll_url": "https://alerts.globaleas.org/api/v1/alerts/active",
     "alerts_dir": "alerts",

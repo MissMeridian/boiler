@@ -5,8 +5,6 @@ import aubio
 import coloredlogs
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
-coloredlogs.install(level="DEBUG")
 
 class AudioRequestError(Exception):
     '''This class is called when an issue occurs while requesting audio from the server.'''
@@ -176,4 +174,6 @@ def trim_headers(directory:str, target_file:str):
 
 if __name__ == "__main__":
     #scan_attn(path_wav="alerts/86240/audio-temp.wav")
+    log.setLevel(logging.DEBUG)
+    coloredlogs.install(level="DEBUG")
     trim_headers(directory="alerts\\86240", target_file="alerts\\86240\\audio.mp3")
