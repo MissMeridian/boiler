@@ -1,7 +1,7 @@
 # Filter configuration
 Boiler allows for you to filter out specific alerts from being placed on its feed. You can target by event codes, originators, FIPS codes, station sender IDs, or a combination of your choice.
 
-Filters are laid out in ![filters.cfg](https://github.com/MissMeridian/boiler/blob/main/filters.cfg) as JSON with the following format:
+Filters are laid out in ![filters.cfg.example](../filters.cfg.example) as JSON with the following format:
 ```js
 {
     "FILTER NAME": {
@@ -14,7 +14,7 @@ Filters are laid out in ![filters.cfg](https://github.com/MissMeridian/boiler/bl
 }
 ```
 **General Behavior:**
-- Alerts are matched to a filter from top to bottom in ![filters.cfg](https://github.com/MissMeridian/boiler/blob/main/filters.cfg).
+- Alerts are matched to a filter from top to bottom in **filters.cfg** (you'll need to create your own **filters.cfg** file, using ![**filters.cfg.example**](../filters.cfg.example) as a reference.).
   - This means your more broader filters (like simply catching one originator) should be placed near the bottom of the config, because if they are placed above a filter that uses that option with additional target options, it will never be hit. View the example filter explanation below for more details.
 - When an alert is matched to a filter, the value of "allow" determines what will happen to that alert.
   - If "allow" is `true`, the alert will be accepted.
