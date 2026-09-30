@@ -55,7 +55,7 @@ def load_config():
     
     # We'll load the current config values as a new config, if they exist, and if not, the values will be set back to the default.
     new_cfg = {
-        "poll_url": str(cfg.get("poll_url", "https://alerts.globaleas.org/api/v1/alerts/active")),
+        "poll_url": str(cfg.get("poll_url", "https://alerts.globaleas.org/api/v2/alerts/active")),
         "alerts_dir": str(cfg.get("alerts_dir", "alerts")),
         "archive_dir": str(cfg.get("archive_dir", "archive")),
         "web": {
