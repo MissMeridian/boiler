@@ -140,7 +140,7 @@ if __name__ == "__main__":
     log.setLevel(logging.DEBUG)
     coloredlogs.install(level="DEBUG")
     test_cfg = {
-    "poll_url": "https://alerts.globaleas.org/api/v1/alerts/active",
+    "poll_url": "https://alerts.globaleas.org/api/v2/alerts/active",
     "alerts_dir": "alerts",
     "archive_dir": "archive",
     "web": {

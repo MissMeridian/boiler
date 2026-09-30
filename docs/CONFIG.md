@@ -1,8 +1,8 @@
 # Configuring Boiler
-The default configuration file (boiler.cfg) for boiler should appear as follows:
+The default configuration file (**boiler.cfg**) for boiler should appear as follows when you first run the program:
 ```js
 {
-  "poll_url": "https://alerts.globaleas.org/api/v1/alerts/active",
+  "poll_url": "https://alerts.globaleas.org/api/v2/alerts/active",
   "alerts_dir": "alerts",
   "archive_dir": "archive",
   "delete_on_expire": true,
