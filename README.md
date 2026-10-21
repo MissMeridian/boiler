@@ -1,4 +1,13 @@
-![Boiler](https://github.com/MissMeridian/boiler/blob/main/docs/boiler.png)
+# ⚠ This repository has been archived as the function it serves has been fully replaced by the developers of Central Alert Repository.
+Boiler's purpose was to generate an IPAWS-standard Common Alert Protocol (CAP) XML feed for ingesting the alerts from GWES's ["Central Alert Repository" (CAR)](https://alerts.globaleas.org/) as real CAP messages on Emergency Alert System encoder/decoder hardware. **It is not longer needed as GWES has fully replaced the need for Boiler with native implementation of their own emulated IPAWS feed.**
+
+Install the following endpoint as a CAP source on your EAS hardware as a replacement: https://alerts.globaleas.org/IPAWSOPEN_EAS_SERVICE/rest/update. Alert filtering must be defined on your receiving device.
+
+**Boiler will no longer be maintained.** It is still a functional software, but a better solution has replaced the need for it. Thank you for understanding.
+
+---
+
+![Boiler](docs/boiler.png)
 # What is Boiler?
 Boiler is an IPAWS feed emulator that converts alerts from GWES's ["Central Alert Repository" (CAR)](https://alerts.globaleas.org/) into Common Alert Protocol (CAP) alerts for digital reception on all IoT EAS platforms. 
 
